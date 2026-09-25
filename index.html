@@ -55266,9 +55266,7 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
   const AI_KEY_STORE = "mep.ai.keys.v1";
   const AI_GMODELS_STORE = "mep.ai.gmodels.v1";
   const RELAY_OFF_STORE = "mep.ai.relayoff.v1";
-  const LEGACY_POST = "https://text.pollinations.ai/openai";
   const LEGACY_GET = "https://text.pollinations.ai/";
-  const LEGACY_MODELS = ["openai-fast", "openai", "mistral"];
   const POLL_URL = "https://gen.pollinations.ai/v1/chat/completions";
   const POLL_MODELS = ["openai", "mistral", "deepseek", "openai-fast"];
 
@@ -55291,6 +55289,13 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
   }
   function markRelayOff() {
     try { localStorage.setItem(RELAY_OFF_STORE, String(Date.now() + 600000)); } catch (e) {}
+  }
+
+  /* upstream billing / auth walls — NEVER shown to the student as an answer:
+     "The account behind this API key doesn't have enough credits…" etc. */
+  function aiLooksDead(t) {
+    return /enough credits|low[_ ]balance|top-up|ref=agent|A valid API key is required|UNAUTHORIZED|insufficient[_ ]credits/i
+      .test(String(t || ""));
   }
 
   /* the words the chat shows when every provider said no */
@@ -55509,6 +55514,7 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
         if (j && j.error) throw aiStop("HTTP 400 " + ((j.error && j.error.message) || "error"), "model");
         const t = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content || "";
         if (!t) throw aiStop("empty", "retry");
+        if (aiLooksDead(t)) throw aiStop("HTTP 402 upstream has no credits", "model");
         if (opts.onDelta) opts.onDelta(t);
         return t;
       }
@@ -55538,6 +55544,7 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
         }
       }
       if (!out) throw aiStop("empty stream", "retry");
+      if (aiLooksDead(out)) throw aiStop("HTTP 402 upstream has no credits", "model");
       return out;
     } catch (e) {
       if (e && e.aiStop) throw e;
@@ -55568,17 +55575,8 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
         return openaiLikeOnce(POLL_URL, { "Authorization": "Bearer " + k.poll }, m, messages, o);
       }
     });
-    if (!relayOff()) chain.push({
-      id: "relay", tries: 1,
-      list: function () { return Promise.resolve(LEGACY_MODELS.slice()); },
-      run: function (m, o) { return openaiLikeOnce(LEGACY_POST, null, m, messages, o); },
-      done: function () {
-        /* the relay answered with an HTTP error → don't knock on it for 10 min */
-        const code = aiHttp(lastErr);
-        if (code >= 400 && code < 600) markRelayOff();
-      }
-    });
-
+    /* the old relay rides below as a plain-text GET — the only path of it
+       that still answers (its POST wants credits and bills a wall) */
     for (let pi = 0; pi < chain.length; pi++) {
       const p = chain[pi];
       let models = [];
@@ -55656,6 +55654,7 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
     if (!res.ok) throw new Error("HTTP " + res.status);
     const t = await res.text();
     if (!t || /^\s*<(!doctype|html)/i.test(t)) throw new Error("empty");
+    if (aiLooksDead(t)) throw new Error("HTTP 402 the free relay has no credits left");
     return t;
   }
 
