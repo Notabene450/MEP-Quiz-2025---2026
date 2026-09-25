@@ -844,6 +844,50 @@ mark.amark{background:#ffe680;color:#111;border-radius:4px;padding:0 2px;font-we
   transition:transform .16s ease;
 }
 #aitutorbtn:hover{transform:scale(1.1) rotate(-6deg)}
+/* ---------- ⚙ AI settings (the free-key card, bottom-left above the tutor) ---------- */
+#aisetbtn{
+  position:fixed;left:16px;bottom:74px;z-index:736;width:40px;height:40px;border:0;cursor:pointer;
+  border-radius:14px;font-size:18px;display:grid;place-items:center;
+  background:#31343f;color:#ffd21f;box-shadow:0 5px 14px rgba(0,0,0,.35);
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+#aisetbtn:hover{transform:scale(1.12);box-shadow:0 0 0 3px rgba(255,210,31,.5),0 6px 16px rgba(0,0,0,.4)}
+#aisetwrap{
+  position:fixed;inset:0;z-index:890;display:none;align-items:center;justify-content:center;
+  background:rgba(20,20,40,.45);backdrop-filter:blur(3px);padding:14px;
+}
+#aisetwrap.show{display:flex;animation:anspop .22s ease-out 1}
+#aisetcard{
+  width:min(430px,96vw);background:#fff;border:2px solid #e6e9ef;border-radius:18px;
+  box-shadow:0 18px 44px rgba(15,25,50,.3);overflow:hidden;
+}
+#aisetcard .aiset-h{display:flex;align-items:center;gap:9px;padding:12px 14px;background:linear-gradient(135deg,#31343f,#1f2937);color:#fff}
+#aisetcard .aiset-h b{font-size:15px}
+#aisetx{margin-left:auto;border:0;background:#fff;color:#15171c;width:30px;height:30px;border-radius:9px;cursor:pointer;font-weight:900}
+#aisetx:hover{background:#ffe680}
+.aiset-body{padding:13px 15px 15px;font-size:13.5px;line-height:1.5;color:#31343f}
+.aiset-body p{margin:0 0 10px}
+.aiset-body label{display:block;font-weight:800;font-size:12.5px;margin:11px 0 4px;color:#1f2937}
+.aiset-body input[type=password],.aiset-body input[type=text]{
+  width:100%;border:2px solid #dfe5ee;border-radius:11px;padding:8px 10px;font-size:13.5px;
+  font-family:inherit;font-weight:700;color:#15171c;background:#fbfcff;
+}
+.aiset-body input:focus{outline:0;border-color:#4285f4;box-shadow:0 0 0 3px rgba(66,133,244,.16)}
+.aiset-links{font-size:12px;color:#6b7280;margin-top:4px}
+.aiset-links a{color:#0b6e99;font-weight:800;text-decoration:none}
+.aiset-links a:hover{text-decoration:underline}
+.aiset-row{display:flex;gap:8px;margin-top:13px}
+.aiset-row button{
+  flex:1;border:0;border-radius:12px;padding:9px 10px;font-family:inherit;font-weight:900;font-size:13.5px;cursor:pointer;
+}
+.aiset-save{background:linear-gradient(135deg,#4285f4,#6a55e8);color:#fff;box-shadow:0 5px 14px rgba(66,133,244,.35)}
+.aiset-save:hover{filter:brightness(1.12)}
+.aiset-clear{background:#f1f3f7;color:#4b5563}
+.aiset-clear:hover{background:#e4e7ee}
+#aisetstatus{margin-top:10px;font-size:12.8px;font-weight:800;min-height:17px;color:#6b7280}
+#aisetstatus.ok{color:#0f8a3c}
+#aisetstatus.bad{color:#c22a2a}
+.aiset-note{font-size:11.6px;color:#8b93a1;margin-top:9px;line-height:1.5}
 #aitutorwrap{
   position:fixed;inset:0;z-index:880;display:none;align-items:center;justify-content:center;
   background:rgba(20,20,40,.42);backdrop-filter:blur(3px);padding:14px;
@@ -1031,6 +1075,28 @@ input[dir="auto"], textarea[dir="auto"]{ unicode-bidi: plaintext; }
 </div>
 
 <!-- ===== 🤖 the tutor of the whole quiz ===== -->
+<!-- ===== ⚙ AI settings — paste ONE free key, saved only in this browser ===== -->
+<button id="aisetbtn" title="AI settings — bring the tutor back (free keys)">⚙</button>
+<div id="aisetwrap" role="dialog" aria-label="AI settings">
+  <div id="aisetcard">
+    <div class="aiset-h"><span>⚙</span><b>AI settings</b><button id="aisetx" title="close">✕</button></div>
+    <div class="aiset-body">
+      <p>🧪 The old <b>free relay was taken down</b>. The tutor now works through <b>one free key</b> of your choice — paste it once and it is saved <b>only in this browser</b> (never in the file, never on a server).</p>
+      <label for="aisetgem">🔑 Google Gemini — free tier (recommended)</label>
+      <input id="aisetgem" type="password" autocomplete="off" spellcheck="false" placeholder="AIza… paste your Gemini API key">
+      <div class="aiset-links">free key, ~1 minute, no card → <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></div>
+      <label for="aisetpol">🌸 Pollinations — free key</label>
+      <input id="aisetpol" type="password" autocomplete="off" spellcheck="false" placeholder="sk-… paste your Pollinations key">
+      <div class="aiset-links">free key → <a href="https://enter.pollinations.ai/keys" target="_blank" rel="noopener">enter.pollinations.ai/keys</a></div>
+      <div class="aiset-row">
+        <button id="aisetsave" class="aiset-save">💾 save &amp; test</button>
+        <button id="aisetclear" class="aiset-clear">🧹 clear</button>
+      </div>
+      <div id="aisetstatus"></div>
+      <div class="aiset-note">With no key the page still tries the old free relay in the background ✨ · بالعربي: من غير مفتاح الصفحة هتحاول الـ relay المجاني القديم في الخلفية</div>
+    </div>
+  </div>
+</div>
 <button id="aitutorbtn" title="the AI tutor — ask anything about the quiz">🤖</button>
 <div id="aitutorwrap">
   <div id="aitutorcard">
@@ -55152,7 +55218,7 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
 </script>
 <script>
 /* =========================================================================
-   THE AI TUTOR ENGINE  ·  online · no accounts · nothing to paste
+   THE AI TUTOR ENGINE  ·  online · 2026 rework (the keyless relay is gone)
    -------------------------------------------------------------------------
    One engine powers EVERYTHING on this page:
      · the 🤖 chat under every single question (MCQ, SAQ, written, practical,
@@ -55184,37 +55250,198 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
   }
 
   /* =======================================================================
-     1 · THE ONLINE MODEL  (free, anonymous, no accounts, no keys — ever)
+     1 · THE ONLINE MODEL — 2026 REWORK  (the old keyless relay is gone)
+     ------------------------------------------------------------------------
+     text.pollinations.ai — the free anonymous relay this page was born
+     with — was TAKEN DOWN (it answers 502 now), and the new unified API
+     wants a key.  So the engine walks a CHAIN of providers until one of
+     them talks:
+        1. Google Gemini  — free-tier key from AI Studio  (paste ONCE in ⚙)
+        2. Pollinations   — free key from enter.pollinations (paste ONCE in ⚙)
+        3. the old relay  — kept as the last resort, if it ever wakes up
+     Keys live ONLY in this browser (localStorage): never inside this file,
+     never on a server, and they travel only to their own API.  The chat,
+     the grading, the AI search and the picture check all ride this chain.
      ======================================================================= */
-  const AI_URL = "https://text.pollinations.ai/openai";
-  const AI_GET = "https://text.pollinations.ai/";
-  const AI_MODELS = ["openai-fast", "openai", "mistral"];
+  const AI_KEY_STORE = "mep.ai.keys.v1";
+  const AI_GMODELS_STORE = "mep.ai.gmodels.v1";
+  const RELAY_OFF_STORE = "mep.ai.relayoff.v1";
+  const LEGACY_POST = "https://text.pollinations.ai/openai";
+  const LEGACY_GET = "https://text.pollinations.ai/";
+  const LEGACY_MODELS = ["openai-fast", "openai", "mistral"];
+  const POLL_URL = "https://gen.pollinations.ai/v1/chat/completions";
+  const POLL_MODELS = ["openai", "mistral", "deepseek", "openai-fast"];
 
-  async function aiOnce(model, messages, opts) {
+  function aiKeys() {
+    try { return JSON.parse(localStorage.getItem(AI_KEY_STORE)) || {}; }
+    catch (e) { return {}; }
+  }
+  function aiHasKeys() { const k = aiKeys(); return !!(k.gemini || k.poll); }
+  function aiStop(msg, stop) { const e = new Error(msg); e.aiStop = stop || "model"; return e; }
+  function aiHttp(e) { const m = String((e && e.message) || "").match(/HTTP (\d+)/); return m ? +m[1] : 0; }
+  function aiSleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function aiStopForStatus(st) {
+    if (st === 401 || st === 403) return "provider";  /* bad key → drop the whole provider */
+    if (st >= 500) return "retry";                    /* server hiccup → try it once more */
+    return "model";                                   /* 400 / 404 / 429 … → next model */
+  }
+  function relayOff() {
+    try { return +(localStorage.getItem(RELAY_OFF_STORE) || 0) > Date.now(); }
+    catch (e) { return false; }
+  }
+  function markRelayOff() {
+    try { localStorage.setItem(RELAY_OFF_STORE, String(Date.now() + 600000)); } catch (e) {}
+  }
+
+  /* the words the chat shows when every provider said no */
+  function aiFailText() {
+    if (!aiHasKeys()) {
+      return [
+        "🌐 the old **free relay was taken down** — the tutor needs one free key now 😔",
+        "- ⚙ **AI settings** (bottom-left, under the 🤖 tutor) → paste a **Gemini key** — free, ~1 minute, no card: aistudio.google.com/apikey",
+        "- or a free **Pollinations key**: enter.pollinations.ai/keys",
+        "- the key lives in **YOUR browser only** ✨ never in the file, never on a server",
+        "- everything else on this page still works offline ✨",
+        "- بالعربي: الـ AI المجاني اتقفل — ضيف مفتاح مجاني من ⚙ الإعدادات وهيشتغل على طول ✨"
+      ].join("\n");
+    }
+    return [
+      "🔑 the AI didn't answer — the saved key may be **expired or out of quota**",
+      "- open **⚙ AI settings** (bottom-left) → **save & test** — replace the key if it shows ✗",
+      "- بالعربي: جرب المفتاح من زرار الاختبار في ⚙ الإعدادات"
+    ].join("\n");
+  }
+
+  /* ---------- provider 1 · Google Gemini (free tier, key pasted in ⚙) ---------- */
+  const GEMINI_FALLBACK_MODELS = [
+    "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash",
+    "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite",
+    "gemini-3-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"
+  ];
+
+  function geminiVer(n) {
+    const m = String(n).match(/gemini-(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
+    return m ? [+m[1] || 0, +(m[2] || 0), +(m[3] || 0)] : [0, 0, 0];
+  }
+  function geminiTier(n) {
+    if (/lite/.test(n)) return 1;       /* flash-lite = the quota workhorse */
+    if (/flash/.test(n)) return 0;      /* regular flash first: smart + fast */
+    if (/pro/.test(n)) return 2;
+    return 3;
+  }
+  function geminiCompare(a, b) {
+    const va = geminiVer(a), vb = geminiVer(b);
+    for (let i = 0; i < 3; i++) if (va[i] !== vb[i]) return vb[i] - va[i];
+    const ta = geminiTier(a), tb = geminiTier(b);
+    if (ta !== tb) return ta - tb;
+    return a < b ? -1 : 1;
+  }
+
+  /* the live model list (cached for a week), the hard list only as a backup */
+  async function geminiModelList(key) {
+    try {
+      const c = JSON.parse(localStorage.getItem(AI_GMODELS_STORE) || "null");
+      if (c && c.t && (Date.now() - c.t) < 6048e5 && Array.isArray(c.m) && c.m.length) return c.m;
+    } catch (e) {}
+    try {
+      const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models?key=" +
+        encodeURIComponent(key) + "&pageSize=200");
+      if (res.ok) {
+        const j = await res.json();
+        const list = [];
+        (j.models || []).forEach(function (m) {
+          const n = String((m && m.name) || "").replace(/^models\//, "");
+          if (!/^gemini-/.test(n)) return;
+          if (/embedding|imagen|tts|aqa|video|image/.test(n)) return;
+          const gens = m && m.supportedGenerationMethods;
+          if (gens && gens.indexOf("generateContent") < 0) return;
+          if (list.indexOf(n) < 0) list.push(n);
+        });
+        list.sort(geminiCompare);
+        if (list.length) {
+          try { localStorage.setItem(AI_GMODELS_STORE, JSON.stringify({ t: Date.now(), m: list })); } catch (e) {}
+          return list;
+        }
+      }
+    } catch (e) {}
+    return GEMINI_FALLBACK_MODELS.slice();
+  }
+
+  /* OpenAI-style messages → Gemini contents (+ systemInstruction, + pictures) */
+  function geminiBody(messages, temperature) {
+    const sysText = [], contents = [];
+    (messages || []).forEach(function (m) {
+      const parts = [];
+      if (typeof m.content === "string") {
+        if (m.content) parts.push({ text: m.content });
+      } else if (Array.isArray(m.content)) {
+        m.content.forEach(function (c) {
+          if (!c) return;
+          if (c.type === "text" && c.text) parts.push({ text: String(c.text) });
+          else if (c.type === "image_url" && c.image_url && c.image_url.url) {
+            const u = String(c.image_url.url);
+            const mm = u.match(/^data:([^;,]+);base64,([\s\S]*)$/);
+            if (mm) parts.push({ inline_data: { mime_type: mm[1], data: mm[2].replace(/\s+/g, "") } });
+            else if (/^https:\/\//.test(u)) parts.push({ text: "[the student attached this picture: " + u + "]" });
+          }
+        });
+      }
+      if (!parts.length) return;
+      if (m.role === "system") {
+        parts.forEach(function (p) { if (p.text) sysText.push(p.text); });
+        return;
+      }
+      const role = m.role === "assistant" ? "model" : "user";
+      const last = contents[contents.length - 1];
+      if (last && last.role === role) parts.forEach(function (p) { last.parts.push(p); });
+      else contents.push({ role: role, parts: parts });
+    });
+    const body = {
+      contents: contents,
+      generationConfig: { temperature: temperature == null ? 0.6 : temperature }
+    };
+    if (sysText.length) body.systemInstruction = { parts: [{ text: sysText.join("\n\n") }] };
+    return body;
+  }
+
+  function geminiTextOf(j) {
+    if (Array.isArray(j)) j = j.length ? j[j.length - 1] : null;
+    if (!j || !Array.isArray(j.candidates)) return "";
+    let t = "";
+    j.candidates.forEach(function (c) {
+      if (c && c.content && Array.isArray(c.content.parts)) {
+        c.content.parts.forEach(function (p) {
+          if (p && typeof p.text === "string" && !p.thought) t += p.text;
+        });
+      }
+    });
+    return t;
+  }
+
+  async function geminiOnce(model, messages, opts, key) {
     const ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
     const timer = ctl ? setTimeout(function () { ctl.abort(); }, 90000) : null;
     try {
-      const res = await fetch(AI_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: model,
-          messages: messages,
-          stream: true,
-          temperature: opts.temperature != null ? opts.temperature : 0.6
-        }),
-        signal: ctl ? ctl.signal : undefined
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
+      const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" +
+        encodeURIComponent(model) + ":streamGenerateContent?alt=sse&key=" + encodeURIComponent(key), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(geminiBody(messages, opts.temperature)),
+          signal: ctl ? ctl.signal : undefined
+        });
+      if (!res.ok) throw aiStop("HTTP " + res.status, aiStopForStatus(res.status));
       const ctype = (res.headers.get("content-type") || "").toLowerCase();
 
       if (ctype.indexOf("json") > -1 && ctype.indexOf("event-stream") === -1) {
-        const j = await res.json();
-        const t = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content || "";
-        if (!t) throw new Error("empty");
+        let j = null;
+        try { j = await res.json(); } catch (e) {}
+        if (j && j.error) throw aiStop("HTTP 400 " + (j.error.message || "error"), "model");
+        const t = geminiTextOf(j);
+        if (!t) throw aiStop("empty", "retry");
         if (opts.onDelta) opts.onDelta(t);
         return t;
       }
+
       const reader = res.body.getReader();
       const dec = new TextDecoder();
       let buf = "", out = "";
@@ -55225,9 +55452,80 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
         const lines = buf.split("\n");
         buf = lines.pop();
         for (let i = 0; i < lines.length; i++) {
-          const t = lines[i].trim();
-          if (!t || t[0] === ":") continue;
-          const data = t.indexOf("data:") === 0 ? t.slice(5).trim() : t;
+          const ln = lines[i].trim();
+          if (!ln || ln[0] === ":") continue;
+          if (ln.indexOf("data:") !== 0) continue;
+          const data = ln.slice(5).trim();
+          if (!data || data === "[DONE]") continue;
+          try {
+            const obj = JSON.parse(data);
+            if (obj && obj.error) {
+              throw aiStop("HTTP 400 " + (obj.error.message || "error"),
+                /api key|permission|denied/i.test(obj.error.message || "") ? "provider" : "model");
+            }
+            const piece = geminiTextOf(obj);
+            if (piece) { out += piece; if (opts.onDelta) opts.onDelta(piece); }
+          } catch (e2) {
+            if (e2 && e2.aiStop) throw e2;
+          }
+        }
+      }
+      if (!out) throw aiStop("empty stream", "retry");
+      return out;
+    } catch (e) {
+      if (e && e.aiStop) throw e;
+      const s = String((e && e.message) || e);
+      if (/abort/i.test(s)) { const a = aiStop(s, "retry"); a.aiAbort = true; throw a; }
+      throw aiStop(s, "retry"); /* network hiccup → the chain moves on / retries */
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
+
+  /* ---------- provider 2+3 · OpenAI-compatible endpoints (pollinations / old relay) ---------- */
+  async function openaiLikeOnce(url, extraHeaders, model, messages, opts) {
+    const ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+    const timer = ctl ? setTimeout(function () { ctl.abort(); }, 90000) : null;
+    try {
+      const headers = { "Content-Type": "application/json" };
+      if (extraHeaders) Object.keys(extraHeaders).forEach(function (h) { headers[h] = extraHeaders[h]; });
+      const res = await fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+          model: model,
+          messages: messages,
+          stream: true,
+          temperature: opts.temperature != null ? opts.temperature : 0.6
+        }),
+        signal: ctl ? ctl.signal : undefined
+      });
+      if (!res.ok) throw aiStop("HTTP " + res.status, aiStopForStatus(res.status));
+      const ctype = (res.headers.get("content-type") || "").toLowerCase();
+
+      if (ctype.indexOf("json") > -1 && ctype.indexOf("event-stream") === -1) {
+        let j = null;
+        try { j = await res.json(); } catch (e) {}
+        if (j && j.error) throw aiStop("HTTP 400 " + ((j.error && j.error.message) || "error"), "model");
+        const t = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content || "";
+        if (!t) throw aiStop("empty", "retry");
+        if (opts.onDelta) opts.onDelta(t);
+        return t;
+      }
+
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "", out = "";
+      for (;;) {
+        const r = await reader.read();
+        if (r.done) break;
+        buf += dec.decode(r.value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop();
+        for (let i = 0; i < lines.length; i++) {
+          const ln = lines[i].trim();
+          if (!ln || ln[0] === ":") continue;
+          const data = ln.indexOf("data:") === 0 ? ln.slice(5).trim() : ln;
           if (!data || data === "[DONE]") continue;
           try {
             const obj = JSON.parse(data);
@@ -55239,35 +55537,95 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
           } catch (e) {}
         }
       }
-      if (!out) throw new Error("empty stream");
+      if (!out) throw aiStop("empty stream", "retry");
       return out;
+    } catch (e) {
+      if (e && e.aiStop) throw e;
+      const s = String((e && e.message) || e);
+      if (/abort/i.test(s)) { const a = aiStop(s, "retry"); a.aiAbort = true; throw a; }
+      throw aiStop(s, "retry");
     } finally {
       if (timer) clearTimeout(timer);
     }
   }
 
+  /* ---------- the chain: gemini key → pollinations key → the old relay ---------- */
   async function aiAsk(messages, opts) {
     opts = opts || {};
+    const k = aiKeys();
+    const chain = [];
     let lastErr = null;
-    for (let m = 0; m < AI_MODELS.length; m++) {
-      for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-          return await aiOnce(AI_MODELS[m], messages, opts);
-        } catch (e) {
-          lastErr = e;
-          if (String(e).indexOf("aborted") > -1 && opts.cancelled) throw e;
-          await new Promise(function (r) { setTimeout(r, 500 + attempt * 800); });
+
+    if (k.gemini) chain.push({
+      id: "gemini", tries: 2,
+      list: function () { return geminiModelList(k.gemini); },
+      run: function (m, o) { return geminiOnce(m, messages, o, k.gemini); }
+    });
+    if (k.poll) chain.push({
+      id: "pollinations", tries: 2,
+      list: function () { return Promise.resolve(POLL_MODELS.slice()); },
+      run: function (m, o) {
+        return openaiLikeOnce(POLL_URL, { "Authorization": "Bearer " + k.poll }, m, messages, o);
+      }
+    });
+    if (!relayOff()) chain.push({
+      id: "relay", tries: 1,
+      list: function () { return Promise.resolve(LEGACY_MODELS.slice()); },
+      run: function (m, o) { return openaiLikeOnce(LEGACY_POST, null, m, messages, o); },
+      done: function () {
+        /* the relay answered with an HTTP error → don't knock on it for 10 min */
+        const code = aiHttp(lastErr);
+        if (code >= 400 && code < 600) markRelayOff();
+      }
+    });
+
+    for (let pi = 0; pi < chain.length; pi++) {
+      const p = chain[pi];
+      let models = [];
+      try { models = (await p.list()) || []; } catch (e) { lastErr = lastErr || e; }
+      outer:
+      for (let mi = 0; mi < models.length; mi++) {
+        for (let a = 0; a < p.tries; a++) {
+          try {
+            return await p.run(models[mi], opts);
+          } catch (e) {
+            if (e && e.aiAbort && opts.cancelled) throw e;
+            lastErr = e;
+            const stop = (e && e.aiStop) || "retry";
+            if (stop === "retry" && a + 1 < p.tries) { await aiSleep(400 + a * 700); continue; }
+            if (stop === "provider") break outer;
+            break; /* next model */
+          }
         }
       }
+      if (p.done) { try { p.done(); } catch (e) {} }
     }
-    try {
-      const t = await aiGetFallbackText(messages);
-      if (opts.onDelta) opts.onDelta(t);
-      return t;
-    } catch (e2) {
-      throw lastErr || e2;
+
+    /* last resort: the old relay's plain-text GET (still free if it returns) */
+    if (!relayOff()) {
+      try {
+        const t = await aiGetFallbackText(messages);
+        if (opts.onDelta) opts.onDelta(t);
+        return t;
+      } catch (e2) {
+        lastErr = lastErr || e2;
+        const code = aiHttp(e2);
+        if (code >= 400 && code < 600) markRelayOff();
+      }
     }
+
+    /* one gentle, one-time nudge towards ⚙ the first time the student hits the wall */
+    if (!aiHasKeys()) {
+      try {
+        if (!localStorage.getItem("mep.ai.nagged")) {
+          localStorage.setItem("mep.ai.nagged", "1");
+          toast("🤖 the old free AI relay was taken down — tap ⚙ (bottom-left) to add a FREE key ✨");
+        }
+      } catch (e) {}
+    }
+    throw lastErr || new Error("no ai provider");
   }
+
   /* aiAsk + a deterministic language mirror: if the student wrote Arabic but
      the model answered without a single Arabic word, retry once, harder */
   async function aiAskLang(msgs, opts, arabicIn) {
@@ -55294,12 +55652,110 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
       return (m.role === "user" ? "Student: " : "Tutor: ") + c;
     }).join("\n");
     const prompt = (sys + "\n\n" + rest + "\nTutor:").slice(-5500);
-    const res = await fetch(AI_GET + encodeURIComponent(prompt) + "?model=openai-fast");
+    const res = await fetch(LEGACY_GET + encodeURIComponent(prompt) + "?model=openai-fast");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const t = await res.text();
-    if (!t) throw new Error("empty");
+    if (!t || /^\s*<(!doctype|html)/i.test(t)) throw new Error("empty");
     return t;
   }
+
+  /* =======================================================================
+     1b · ⚙ THE AI SETTINGS CARD  (paste a free key once — it stays local)
+     ======================================================================= */
+  const AISet = {
+    open: function () {
+      const w = document.getElementById("aisetwrap");
+      if (!w) return;
+      const k = aiKeys();
+      const g = document.getElementById("aisetgem");
+      const p = document.getElementById("aisetpol");
+      if (g) g.value = k.gemini || "";
+      if (p) p.value = k.poll || "";
+      AISet.status("", "");
+      w.classList.add("show");
+    },
+    close: function () {
+      const w = document.getElementById("aisetwrap");
+      if (w) w.classList.remove("show");
+    },
+    status: function (txt, cls) {
+      const s = document.getElementById("aisetstatus");
+      if (!s) return;
+      s.textContent = txt || "";
+      s.className = cls || "";
+    },
+    save: async function () {
+      const g = (document.getElementById("aisetgem") || {}).value || "";
+      const p = (document.getElementById("aisetpol") || {}).value || "";
+      const keys = {};
+      if (g.trim()) keys.gemini = g.trim();
+      if (p.trim()) keys.poll = p.trim();
+      try {
+        localStorage.setItem(AI_KEY_STORE, JSON.stringify(keys));
+        localStorage.removeItem(AI_GMODELS_STORE);
+        localStorage.removeItem(RELAY_OFF_STORE);
+      } catch (e) {}
+      if (!keys.gemini && !keys.poll) {
+        AISet.status("saved (empty) — the page keeps trying the free relay in the background ✨", "");
+        return;
+      }
+      AISet.status("testing the key(s)…", "");
+      const res = await AISet.test();
+      AISet.status(res.msg, res.ok ? "ok" : "bad");
+    },
+    test: async function () {
+      const k = aiKeys();
+      const notes = [];
+      let okAll = true;
+      if (k.gemini) {
+        try {
+          const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models?key=" +
+            encodeURIComponent(k.gemini) + "&pageSize=10");
+          if (res.ok) notes.push("✓ Gemini key works");
+          else { okAll = false; notes.push("✗ Gemini key rejected (HTTP " + res.status + ")"); }
+        } catch (e) { okAll = false; notes.push("✗ Gemini unreachable — check the connection"); }
+      }
+      if (k.poll) {
+        try {
+          const res = await fetch(POLL_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + k.poll },
+            body: JSON.stringify({ model: "openai", messages: [{ role: "user", content: "hi" }],
+                                   stream: false, max_tokens: 4, temperature: 0 })
+          });
+          if (res.ok) notes.push("✓ Pollinations key works");
+          else { okAll = false; notes.push("✗ Pollinations key rejected (HTTP " + res.status + ")"); }
+        } catch (e) { okAll = false; notes.push("✗ Pollinations unreachable — check the connection"); }
+      }
+      return { ok: okAll, msg: notes.join(" · ") || "no key to test" };
+    },
+    clear: function () {
+      try {
+        localStorage.removeItem(AI_KEY_STORE);
+        localStorage.removeItem(AI_GMODELS_STORE);
+        localStorage.removeItem(RELAY_OFF_STORE);
+      } catch (e) {}
+      const g = document.getElementById("aisetgem");
+      const p = document.getElementById("aisetpol");
+      if (g) g.value = "";
+      if (p) p.value = "";
+      AISet.status("cleared — back to the free relay ✨", "");
+    },
+    bind: function () {
+      const b = document.getElementById("aisetbtn"),
+            x = document.getElementById("aisetx"),
+            w = document.getElementById("aisetwrap"),
+            sv = document.getElementById("aisetsave"),
+            cl = document.getElementById("aisetclear");
+      if (b) b.onclick = function () { AISet.open(); };
+      if (x) x.onclick = function () { AISet.close(); };
+      if (w) w.onclick = function (e) { if (e.target === w) AISet.close(); };
+      if (sv) sv.onclick = function () { AISet.save(); };
+      if (cl) cl.onclick = function () { AISet.clear(); };
+    }
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", AISet.bind);
+  else AISet.bind();
 
   /* =======================================================================
      2 · THE PERSONA + THE SECRET RULES
@@ -55676,11 +56132,8 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
       AIChat.scroll(card_of(bubble));
     },
     fail: function (bubble) {
-      q1(".aimsgin", bubble).innerHTML = aiMd(
-        "🌐 hmm — I can't reach the internet right now\n" +
-        "- check the connection (or the VPN) and tap again 📡\n" +
-        "- بالعربي: الـ AI مش واصل للنت دلوقتي — ظبّط النت وجرب تاني ✨\n" +
-        "- everything else on the page still works offline ✨");
+      q1(".aimsgin", bubble).innerHTML = aiMd(aiFailText() +
+        "\n- everything else on the page still works offline ✨");
     },
     scroll: function (card) {
       if (!card) return;
@@ -56046,11 +56499,8 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
         AITutor.hist.push({ role: "user", content: text });
         AITutor.hist.push({ role: "assistant", content: stripVerdict(raw) });
       } catch (e) {
-        q1(".aimsgin", b).innerHTML = aiMd(
-          "🌐 I can't reach the internet right now 📡\n" +
-          "- check the connection (or the VPN) and try again\n" +
-          "- بالعربي: الـ AI مش واصل للنت — ظبّط النت وجرب تاني\n" +
-          "- the rest of the page still works ✨");
+        q1(".aimsgin", b).innerHTML = aiMd(aiFailText() +
+          "\n- the rest of the page still works ✨");
       }
       AITutor.busy = false;
       AITutor.scroll();
@@ -56177,7 +56627,9 @@ __relAdd("complement", ["c1 esterase inhibitor", "c4"]);
       } catch (e) {
         if (mySeq !== AISearch.seq) return;
         AISearch.box.innerHTML =
-          "<div class='aimoff' dir='auto'>🤖 the AI search can't reach the internet — the normal search still works below · الـ AI مش واصل للنت — البحث العادي شغّال تحت</div>";
+          "<div class='aimoff' dir='auto'>🤖 " + (aiHasKeys()
+            ? "the AI search didn't answer — open ⚙ AI settings and test the key · الـ AI ما ردّش — جرب المفتاح من ⚙ الإعدادات"
+            : "the free relay was taken down — add a FREE key in ⚙ AI settings (the normal search still works below) · الـ AI المجاني اتقفل — ضيف مفتاح مجاني من ⚙ الإعدادات (والبحث العادي شغّال تحت)") + "</div>";
       }
       AISearch.busy = false;
     },
